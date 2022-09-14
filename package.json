@@ -1,0 +1,61 @@
+{
+  "name": "tdd",
+  "version": "1.0.0",
+  "description": "tdd programming",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index",
+    "test": "jest --watch",
+    "lint": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alibazregar/tdd.git"
+  },
+  "author": "Ali Bazregar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alibazregar/tdd/issues"
+  },
+  "homepage": "https://github.com/alibazregar/tdd#readme",
+  "dependencies": {
+    "auto-bind": "^4.0.0",
+    "bcrypt": "^5.0.1",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "express-validator": "^6.14.2",
+    "mongoose": "^6.4.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.18.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "jest": "^28.1.2",
+    "nodemon": "^2.0.18",
+    "prettier": "^2.7.1",
+    "supertest": "^6.2.3"
+  },
+  "eslintConfig": {
+    "parserOptions": {
+      "ecmaVersion": 2022
+    },
+    "plugins": [
+      "prettier"
+    ],
+    "extends": [
+      "eslint:recommended",
+      "plugins:prettier/recommended"
+    ],
+    "env": {
+      "node": true,
+      "es6": true,
+      "jest": true
+    },
+    "rules": {
+      "semi": "warn",
+      "eqeqeq": "warn"
+    },
+    "prettier": {}
+  }
+}
