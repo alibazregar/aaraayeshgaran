@@ -22,9 +22,11 @@ const categorySchema = new Schema({
       "aerator",
       "brushAndPadWashMachine",
       "faceBrush",
-      "eyelashCurler"
+      "eyelashCurler",
+      "perfume"
     ],
   },
   name:{type:String, required: true},
+  photo:{type:String, required:true}
 });
 module.exports = mongoose.model("category", categorySchema);
