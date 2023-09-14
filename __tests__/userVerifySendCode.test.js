@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const Code = require("../src/models/code");
 
 beforeAll(async () => {
-  const url = "mongodb://127.0.0.1:27017/test3";
+  const url = "mongodb://127.0.0.1:27017/test6";
   await mongoose.connect(url, { useNewUrlParser: true });
 });
 
@@ -20,7 +20,6 @@ beforeEach(async () => {
     confirmPassword: "password",
   });
   await newUser.save();
-  return Code.deleteMany({});
 });
 describe("sending verify code", () => {
   const post = (phone) => {
@@ -30,8 +29,8 @@ describe("sending verify code", () => {
   };
   it("generate a code when the user is valid", async () => {
     await post("09303294693");
-    const createdCodes = await Code.find({});
-    expect(createdCodes.length).toBe(1);
+    const user = await User.findOne({ phone: "09303294693"})
+    expect(user.verificationCode.length).toBe(6)
   });
 
   it("returns status code 200 when the user is valid", async () => {

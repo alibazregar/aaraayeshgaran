@@ -66,7 +66,7 @@ module.exports = new (class extends controller {
       if (!req.file) {
         return res
           .status(400)
-          .json({ message: "عکس برند را آپلود کنید", result: null });
+          .json({ message: "عکس دسته بندی را آپلود کنید", result: null });
       }
       const array = [
         "eyeMakeup",

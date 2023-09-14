@@ -2,10 +2,9 @@ const request = require("supertest");
 const app = require("../src/app");
 const User = require("../src/models/user");
 const mongoose = require("mongoose");
-const Code = require("../src/models/code");
 
 beforeAll(async () => {
-  const url = "mongodb://127.0.0.1:27017/test3";
+  const url = "mongodb://127.0.0.1:27017/test5";
   await mongoose.connect(url, { useNewUrlParser: true });
 });
 beforeEach(async () => {
@@ -17,14 +16,11 @@ beforeEach(async () => {
     password: "password",
     phone: "09303294693",
     confirmPassword: "password",
+    verificationCode:"123456",
   });
   await newUser.save();
-  const newCode = new Code({
-    phone: "09303294693",
-    code: "123456",
-  });
-  await newCode.save();
 });
+
 describe("verifying user", () => {
   const post = (phone, code) => {
     return request(app)
@@ -33,6 +29,7 @@ describe("verifying user", () => {
   };
   it("returns status code 200 when the code is correct", async () => {
     const response = await post("09303294693","123456")
+    console.log(response);
     expect(response.status).toBe(200)
   });
 });

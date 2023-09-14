@@ -2,14 +2,12 @@ const request = require("supertest");
 const app = require("../src/app");
 const User = require("../src/models/user");
 const mongoose = require("mongoose");
-const Code = require("../src/models/code");
 
 beforeAll(async () => {
-  const url = "mongodb://127.0.0.1:27017/test3";
+  const url = "mongodb://127.0.0.1:27017/test4";
   await mongoose.connect(url, { useNewUrlParser: true });
 });
 beforeEach(async () => {
-  await Code.deleteMany({})
   return User.deleteMany({});
 });
 describe("user registeration", () => {

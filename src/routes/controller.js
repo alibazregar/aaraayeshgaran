@@ -8,6 +8,11 @@ const Category = require("./../models/category");
 const Package = require("./../models/package");
 const Product = require("./../models/product");
 const Comment = require("./../models/comment")
+const Cart  = require("./../models/cart")
+const FavoriteProduct = require("./../models/favoriteProduct")
+const UserAddress = require("./../models/userAddress")
+const Payment = require("./../models/payment")
+const  CompletedCart =  require("./../models/completedCart")
 
 module.exports = class {
   constructor() {
@@ -19,6 +24,11 @@ module.exports = class {
     this.Package = Package;
     this.Brand = Brand;
     this.Category = Category;
+    this.Cart = Cart;
+    this.FavoriteProduct = FavoriteProduct;
+    this.UserAddress = UserAddress;
+    this.Payment = Payment;
+    this.CompletedCart = CompletedCart;
   }
   validationBody(req, res) {
     const result = validationResult(req);

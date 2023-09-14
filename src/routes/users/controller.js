@@ -28,7 +28,7 @@ module.exports = new (class extends controller {
         });
       }
       const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(password, salt);
+      const hashedPassword =  bcrypt.hashSync(password, salt);
 
       const newUser = new this.User({
         firstName: firstName,
@@ -49,7 +49,7 @@ module.exports = new (class extends controller {
   async sendVerifyCode(req, res) {
     try {
       const user = await this.User.findOne({ phone: req.body.phone });
-
+      console.log(process.env.SMS_KEY)
       if (!user) {
         return res
           .status(400)
@@ -60,18 +60,10 @@ module.exports = new (class extends controller {
           message: "حساب شما تایید شده است",
         });
       }
-      await this.Code.deleteMany({ phone: req.body.phone });
       const randomCode = Math.floor(Math.random() * (999999 - 99999)) + 100000;
-      const newCode = new this.Code({
-        phone: req.body.phone,
-        code: randomCode,
-      });
-      await newCode.save();
-      try {
-        await sendCode(randomCode, req.body.phone);
-      } catch (err) {
-        res.status(400).json({ message: err.message });
-      }
+      user.verificationCode = randomCode
+      await user.save();
+      await sendCode(randomCode, req.body.phone);
       return res
         .status(200)
         .json({ message: "کد با موفقیت ارسال شد", result: null });
@@ -88,15 +80,9 @@ module.exports = new (class extends controller {
           .status(400)
           .json({ message: "کاربر یافت نشد", result: null });
       }
-      const existedCode = await this.Code.findOne({ phone: req.body.phone });
-      if (!existedCode) {
-        return res.status(400).json({
-          message: "کد یافت نشد. دوباره روی ارسال کد بزنید",
-          result: null,
-        });
-      }
-      if (existedCode.code == req.body.code) {
+      if (user.verificationCode == req.body.code) {
         user.isVerified = true;
+        user.verificationCode =null
         const saved = await user.save();
         const token = jwt.sign(
           {
@@ -105,7 +91,11 @@ module.exports = new (class extends controller {
           process.env.AUTH_SECRET_KEY,
           { expiresIn: "10d" }
         );
-        await existedCode.delete();
+      
+        const newCart = new this.Cart({
+          user: user._id
+        })
+        await newCart.save();
         return res
           .status(201)
           .json({ message: "کاربر با موفقیت تایید شد", result: token });
@@ -185,4 +175,84 @@ module.exports = new (class extends controller {
       return res.status(500).json({ message: "خطای سرور", result: null });
     }
   }
+  getUsers = async (req, res) => {
+    try {
+      const { page = 1, limit = 10, filter } = req.query;
+      const filterQuery = filter ? {
+        $or: [
+          { firstName: new RegExp(filter, 'i') },
+          { lastName: new RegExp(filter, 'i') },
+          { email: new RegExp(filter, 'i') }
+        ]
+      } : {};
+
+      const users = await this.User.find(filterQuery)
+        .skip((page - 1) * limit)
+        .limit(parseInt(limit));
+
+      res.status(200).json(users);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to retrieve users' });
+    }
+  };
+
+  getUserById = async (req, res) => {
+    try {
+      const userId = req.params.id;
+
+      const user = await this.User.findById(userId);
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+
+      res.status(200).json(user);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to retrieve user' });
+    }
+  };
+
+  getLoggedInUser = async (req, res) => {
+    try {
+      const userId = req.user.id;
+
+      const user = await this.User.findById(userId);
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+
+      res.status(200).json(user);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to retrieve user' });
+    }
+  };
+  editUser = async (req, res) => {
+    try {
+      const userId = req.user._id;
+      const updatedData = req.body;
+
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+
+      // Find the user by ID and update their details (excluding password and isAdmin)
+      const user = await this.User.findByIdAndUpdate(userId, {
+        $set: {
+          email: updatedData.email,
+          phone: updatedData.phone,
+          nationalNumber: updatedData.nationalNumber,
+          birthDate: updatedData.birthDate,
+          isVerified: updatedData.isVerified
+        }
+      }, { new: true });
+
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+
+      res.status(200).json(user);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to update user details' });
+    }
+  };
 })();

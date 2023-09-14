@@ -1,0 +1,110 @@
+{
+  "variables": [],
+  "info": {
+    "name": "User API",
+    "_postman_id": "your-postman-id",
+    "description": "API requests for testing user endpoints.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get All Users",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://arayeshgaran.liara.iran.run/api/v1/users",
+          "protocol": "https",
+          "host": [
+            "arayeshgaran",
+            "liara",
+            "iran",
+            "run"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "users"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get User by ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://arayeshgaran.liara.iran.run/api/v1/users/user_id_here", 
+          "protocol": "https",
+          "host": [
+            "arayeshgaran",
+            "liara",
+            "iran",
+            "run"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "users",
+            "user_id_here" 
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Edit User",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"newemail@example.com\",\n  \"phone\": \"1234567890\",\n  \"nationalNumber\": 12345,\n  \"birthDate\": \"1990-01-01\",\n  \"isVerified\": true\n}"
+        },
+        "url": {
+          "raw": "https://arayeshgaran.liara.iran.run/api/v1/users/user", 
+          "protocol": "https",
+          "host": [
+            "arayeshgaran",
+            "liara",
+            "iran",
+            "run"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "users",
+            "user_id_here" 
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Logged-in User",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://arayeshgaran.liara.iran.run/api/v1/users/me",
+          "protocol": "https",
+          "host": [
+            "arayeshgaran",
+            "liara",
+            "iran",
+            "run"
+          ],
+          "path": [
+            "api",
+            "v1",
+            "me"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "protocolProfileBehavior": {}
+}
